@@ -8069,13 +8069,13 @@ var $interpolateMinErr = minErr('$interpolate');
       this.label = "This binding is brought you by // interpolation symbols.";
   });
 </script>
-<div ng-app="App" ng-controller="DemoController as demo">
-    //demo.label//
+<div ng-app="App" ng-controller="DemoController as demo-ng-route">
+    //demo-ng-route.label//
 </div>
 </doc:source>
 <doc:scenario>
  it('should interpolate binding with custom symbols', function() {
-  expect(binding('demo.label')).toBe('This binding is brought you by // interpolation symbols.');
+  expect(binding('demo-ng-route.label')).toBe('This binding is brought you by // interpolation symbols.');
  });
 </doc:scenario>
 </doc:example>
@@ -12972,7 +12972,7 @@ function $SceDelegateProvider() {
 </file>
 
 <file name="scenario.js">
-  describe('SCE doc demo', function() {
+  describe('SCE doc demo-ng-route', function() {
     it('should sanitize untrusted values', function() {
       expect(element('.htmlComment').html()).toBe('<span>Is <i>anyone</i> reading this?</span>');
     });
@@ -18612,7 +18612,7 @@ var ngIncludeFillContentDirective = ['$compile',
  *
  * <div class="alert alert-error">
  * The only appropriate use of `ngInit` is for aliasing special properties of
- * {@link api/ng.directive:ngRepeat `ngRepeat`}, as seen in the demo below. Besides this case, you
+ * {@link api/ng.directive:ngRepeat `ngRepeat`}, as seen in the demo-ng-route below. Besides this case, you
  * should use {@link guide/controller controllers} rather than `ngInit`
  * to initialize values on a scope.
  * </div>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Overmind Demo</title>
+  <link rel="stylesheet" href="../common/styles.css">
+</head>
+<body>
+  <script src="../common/vendor/require.js" data-main="../common/main.js"></script>
+  <script src="../common/vendor/angular.js"></script>
+  <script src="../common/vendor/angular-ui-router.js"></script>
+  <script src="../common/src/overmind.js"></script>
+
+  <div id="nav">
+    <a href="#/">Home</a>
+    <a href="#/profile">Profile</a>
+    <a href="#/admin">Admin</a>
+  </div>
+
+  <!-- the overmind controls the navigation/loading/bootstrapping of apps -->
+  <div id="overmind">
+    <overmind></overmind>
+  </div>
+
+  <!-- element that gets bootstrapped when the current app changes -->
+  <div id="current-app">
+    <div id="current-view"></div>
+  </div>
+</body>
+</html>
