@@ -21,7 +21,10 @@
     };
     window.overmind = overmind;
 
-    overmind.default = { ngModule: 'home', file: 'apps/home/home'};
+    overmind.default = {
+      ngModule: 'home',
+      file: 'apps/home/home'
+    };
 
     // bootstrap overmind and any initial app(s)
     angular.bootstrap(document.getElementById('overmind'), ['overmind']);

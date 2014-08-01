@@ -1,4 +1,4 @@
-angular.module('admin', [])
+angular.module('admin', ['ngRoute'])
   .config(angular.module('overmind').control())
   .config(function($routeProvider){
     $routeProvider.when('/admin', {controller: 'AdminCtrl', templateUrl: '../common/apps/admin/admin.html'})

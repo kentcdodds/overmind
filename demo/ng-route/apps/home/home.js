@@ -1,4 +1,4 @@
-angular.module('home', [])
+angular.module('home', ['ngRoute'])
   .config(angular.module('overmind').control())
   .config(function($routeProvider){
     $routeProvider.when('/', {controller: 'HomeCtrl', templateUrl: '../common/apps/home/home.html'})

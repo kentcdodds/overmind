@@ -4,16 +4,10 @@
  * Version 0.2.0
  */
 
-var overmind = angular.module('overmind', ['ngRoute']);
+var overmind = angular.module('overmind', []);
 overmind.shared = {};
 
-overmind.config(function($routeProvider, $locationProvider){
-  $routeProvider.otherwise({});
-
-  // share the routeProvider with all the other apps
-  overmind.shared.$routeProvider = $routeProvider;
-})
-.run(function($rootScope, $location, $route, $templateCache, $routeParams, $browser, $rootElement, $q){
+overmind.run(function($rootScope, $location, $templateCache, $browser, $rootElement){
   decorate($location, 'url');
   decorate($location, 'replace');
   decorate($location, 'path');
@@ -37,10 +31,7 @@ overmind.config(function($routeProvider, $locationProvider){
   // make routing components available to other apps
   var shared = overmind.shared;
   shared.$location = $location;
-  shared.$route = $route;
-  shared.$routeParams = $routeParams;
   shared.$templateCache = $templateCache;
-  shared.$routeParams = $routeParams;
   shared.$browser = $browser;
   shared.overmindScope = $rootScope;
 
@@ -85,36 +76,31 @@ angular.module('overmind').share = function(shared){
 // Configures other applications to use routeProvider etc from overmind 
 angular.module('overmind').control = function(){
 
-  return /*@ngInject*/ function($provide){
+  return ['$provide', function($provide){
     var shared = overmind.shared;
     if (!shared) return;
     angular.forEach(overmind.shared, function(val, key){
       $provide.constant(key, val);
     });
-  }
+  }];
 };
 
 
 // overmind directive, replaces ng-view
-angular.module('overmind').directive('overmind', function($location, $route){
+angular.module('overmind').directive('overmind', function($rootScope, $location) {
   return {
     restrict: 'E',
     link: function(scope){
       var currentlyBootstrapped;
       var currentViewScope;
 
-      scope.$on('$routeChangeSuccess', function(){
-        // determine the app (if any) to bootstrap or use default
-        var overmind = angular.module('overmind');
-        var match = $location.path().match(/\/\w+/) || [];
-        var app = overmind.apps[match[0]] || overmind.default;
-
+      $rootScope.$on('$locationChangeSuccess', function() {
+        var app = getCurrentlyMatchingApp();
         // if the app is registered and is different from the current app, bootstrap it
         if (app && app !== currentlyBootstrapped){
           cleanupApp();
           bootstrap(app);
-        }
-        else{
+        } else {
           cleanupView();
           setView();
         }
@@ -125,9 +111,17 @@ angular.module('overmind').directive('overmind', function($location, $route){
           var newApp = getCurrentApp();
           angular.bootstrap(newApp, [app.ngModule]);
           currentlyBootstrapped = app;
-          // check for new matching routes
-          $route.reload();
+
+          cleanupView();
+          setView();
         });
+      }
+
+      function getCurrentlyMatchingApp() {
+        // determine the app (if any) to bootstrap or use default
+        var overmind = angular.module('overmind');
+        var match = $location.path().match(/\/\w+/) || [];
+        return overmind.apps[match[0]] || overmind.default;
       }
 
       // delete scopes and reset app html
@@ -149,12 +143,20 @@ angular.module('overmind').directive('overmind', function($location, $route){
         previousView.replaceWith('<div id="current-view"></div>');
       }
 
-      function setView(){
+      function setView() {
+        console.log('setView');
+        var notReadyToSetView = false;
+        if (notReadyToSetView) {
+          return;
+        }
+
         var currentRoute = $route.current;
-        var locals = currentRoute && currentRoute.locals
+        var locals = currentRoute && currentRoute.locals;
         var template = locals && locals.$template;
 
-        if (!angular.isDefined(template)) { return; }
+        if (!angular.isDefined(template)) {
+          return;
+        }
 
         var currentApp = getCurrentApp();
         var currentView = getCurrentView();
